@@ -1,8 +1,8 @@
 --Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2018.2 (lin64) Build 2258646 Thu Jun 14 20:02:38 MDT 2018
---Date        : Mon Aug 27 14:01:13 2018
---Host        : kkbox running 64-bit unknown
+--Date        : Fri Jul 19 15:36:42 2019
+--Host        : fieldwork running 64-bit unknown
 --Command     : generate_target TopLevel_wrapper.bd
 --Design      : TopLevel_wrapper
 --Purpose     : IP block netlist
@@ -33,7 +33,11 @@ entity TopLevel_wrapper is
     FIXED_IO_mio : inout STD_LOGIC_VECTOR ( 53 downto 0 );
     FIXED_IO_ps_clk : inout STD_LOGIC;
     FIXED_IO_ps_porb : inout STD_LOGIC;
-    FIXED_IO_ps_srstb : inout STD_LOGIC
+    FIXED_IO_ps_srstb : inout STD_LOGIC;
+    spi_rtl_io0_io : inout STD_LOGIC;
+    spi_rtl_io1_io : inout STD_LOGIC;
+    spi_rtl_sck_io : inout STD_LOGIC;
+    spi_rtl_ss_io : inout STD_LOGIC_VECTOR ( 0 to 0 )
   );
 end TopLevel_wrapper;
 
@@ -60,9 +64,42 @@ architecture STRUCTURE of TopLevel_wrapper is
     FIXED_IO_ddr_vrp : inout STD_LOGIC;
     FIXED_IO_ps_srstb : inout STD_LOGIC;
     FIXED_IO_ps_clk : inout STD_LOGIC;
-    FIXED_IO_ps_porb : inout STD_LOGIC
+    FIXED_IO_ps_porb : inout STD_LOGIC;
+    spi_rtl_io0_i : in STD_LOGIC;
+    spi_rtl_io0_o : out STD_LOGIC;
+    spi_rtl_io0_t : out STD_LOGIC;
+    spi_rtl_io1_i : in STD_LOGIC;
+    spi_rtl_io1_o : out STD_LOGIC;
+    spi_rtl_io1_t : out STD_LOGIC;
+    spi_rtl_sck_i : in STD_LOGIC;
+    spi_rtl_sck_o : out STD_LOGIC;
+    spi_rtl_sck_t : out STD_LOGIC;
+    spi_rtl_ss_i : in STD_LOGIC_VECTOR ( 0 to 0 );
+    spi_rtl_ss_o : out STD_LOGIC_VECTOR ( 0 to 0 );
+    spi_rtl_ss_t : out STD_LOGIC
   );
   end component TopLevel;
+  component IOBUF is
+  port (
+    I : in STD_LOGIC;
+    O : out STD_LOGIC;
+    T : in STD_LOGIC;
+    IO : inout STD_LOGIC
+  );
+  end component IOBUF;
+  signal spi_rtl_io0_i : STD_LOGIC;
+  signal spi_rtl_io0_o : STD_LOGIC;
+  signal spi_rtl_io0_t : STD_LOGIC;
+  signal spi_rtl_io1_i : STD_LOGIC;
+  signal spi_rtl_io1_o : STD_LOGIC;
+  signal spi_rtl_io1_t : STD_LOGIC;
+  signal spi_rtl_sck_i : STD_LOGIC;
+  signal spi_rtl_sck_o : STD_LOGIC;
+  signal spi_rtl_sck_t : STD_LOGIC;
+  signal spi_rtl_ss_i_0 : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal spi_rtl_ss_io_0 : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal spi_rtl_ss_o_0 : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal spi_rtl_ss_t : STD_LOGIC;
 begin
 TopLevel_i: component TopLevel
      port map (
@@ -86,6 +123,46 @@ TopLevel_i: component TopLevel
       FIXED_IO_mio(53 downto 0) => FIXED_IO_mio(53 downto 0),
       FIXED_IO_ps_clk => FIXED_IO_ps_clk,
       FIXED_IO_ps_porb => FIXED_IO_ps_porb,
-      FIXED_IO_ps_srstb => FIXED_IO_ps_srstb
+      FIXED_IO_ps_srstb => FIXED_IO_ps_srstb,
+      spi_rtl_io0_i => spi_rtl_io0_i,
+      spi_rtl_io0_o => spi_rtl_io0_o,
+      spi_rtl_io0_t => spi_rtl_io0_t,
+      spi_rtl_io1_i => spi_rtl_io1_i,
+      spi_rtl_io1_o => spi_rtl_io1_o,
+      spi_rtl_io1_t => spi_rtl_io1_t,
+      spi_rtl_sck_i => spi_rtl_sck_i,
+      spi_rtl_sck_o => spi_rtl_sck_o,
+      spi_rtl_sck_t => spi_rtl_sck_t,
+      spi_rtl_ss_i(0) => spi_rtl_ss_i_0(0),
+      spi_rtl_ss_o(0) => spi_rtl_ss_o_0(0),
+      spi_rtl_ss_t => spi_rtl_ss_t
+    );
+spi_rtl_io0_iobuf: component IOBUF
+     port map (
+      I => spi_rtl_io0_o,
+      IO => spi_rtl_io0_io,
+      O => spi_rtl_io0_i,
+      T => spi_rtl_io0_t
+    );
+spi_rtl_io1_iobuf: component IOBUF
+     port map (
+      I => spi_rtl_io1_o,
+      IO => spi_rtl_io1_io,
+      O => spi_rtl_io1_i,
+      T => spi_rtl_io1_t
+    );
+spi_rtl_sck_iobuf: component IOBUF
+     port map (
+      I => spi_rtl_sck_o,
+      IO => spi_rtl_sck_io,
+      O => spi_rtl_sck_i,
+      T => spi_rtl_sck_t
+    );
+spi_rtl_ss_iobuf_0: component IOBUF
+     port map (
+      I => spi_rtl_ss_o_0(0),
+      IO => spi_rtl_ss_io(0),
+      O => spi_rtl_ss_i_0(0),
+      T => spi_rtl_ss_t
     );
 end STRUCTURE;
